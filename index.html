@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Study Planner</title>
+ <style>
+ body{font-family:Arial;background:#f2f2f2;padding:20px}
+ .box{max-width:420px;background:#fff;padding:15px;border-radius:8px}
+ input,button{width:100%;padding:10px;margin:6px 0}
+ li{background:#fafafa;margin:8px 0;padding:10px;border-radius:6px;list-style:none}
+ .done{text-decoration:line-through;color:gray}
+ .row button{width:auto}
+ </style>
+</head>
+<body>
+ <div class="box">
+ <h2>Study Planner</h2>
+
+ <p>
+ Total: <span id="t">0</span> |
+ Completed: <span id="c">0</span> |
+ Remaining: <span id="r">0</span>
+ </p>
+
+ <input id="sub" placeholder="Subject (Math)">
+ <input id="task" placeholder="Task (Practice algebra)">
+ <input id="time" placeholder="Deadline (7 PM)">
+ <button onclick="addTask()">Add</button>
+
+ <ul id="list"></ul>
+ </div>
+
+ <script>
+ let total=0, completed=0;
+
+ function updateCount(){
+ document.getElementById("t").innerText = total;
+ document.getElementById("c").innerText = completed;
+ document.getElementById("r").innerText = total - completed;
+ }
+
+ function addTask(){
+ let sub = document.getElementById("sub").value.trim();
+ let task = document.getElementById("task").value.trim();
+ let time = document.getElementById("time").value.trim();
+
+ if(sub==="" || task==="") return alert("Enter subject and task!");
+
+ let li = document.createElement("li");
+ li.innerHTML = `
+ <b>${sub}</b> - ${task}<br>
+ Deadline: ${time || "-"}<br>
+ <div class="row">
+ <button onclick="toggleDone(this)">Done</button>
+ <button onclick="removeTask(this)">Delete</button>
+ </div>
+ `;
+ document.getElementById("list").appendChild(li);
+
+ total++;
+ updateCount();
+
+ document.getElementById("sub").value="";
+ document.getElementById("task").value="";
+ document.getElementById("time").value="";
+ }
+
+ function toggleDone(btn){
+ let li = btn.parentElement.parentElement;
+ li.classList.toggle("done");
+
+ if(li.classList.contains("done")) completed++;
+ else completed--;
+
+ updateCount();
+ }
+
+ function removeTask(btn){
+ let li = btn.parentElement.parentElement;
+
+ if(li.classList.contains("done")) completed--;
+ li.remove();
+ total--;
+
+ updateCount();
+ }
+ </script>
+</body>
+</html>
